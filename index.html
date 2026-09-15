@@ -1,0 +1,848 @@
+﻿<!-- 
+PALETTE SELECTION: "Energetic & Vibrant Eco" (Cyan: #06b6d4, Dark Cyan: #0284c7, Pink: #ec4899, Dark Pink: #db2777, Amber: #f59e0b, Dark Slate: #0f172a)
+NARRATIVE PLAN:
+1. Executive Hero & Key Metrics (Captive market, WTP, Dwell time).
+2. Vision & Concept ("Heritage Shell, Global Taste" with Osing modern architecture).
+3. Visual Gallery & Attractions Showcase (Gapura, Ferris Wheel, LED Forest, Waterpark).
+4. Masterplan Layout & 24-Hour Cycle (Interactive grid map of zones & foodcourt).
+5. Demographics & Catchment Area (Chart.js Bar & Doughnut for 5 hinterland districts).
+6. Macroeconomics & Purchasing Power (Chart.js Line UMK trend & WTP bar chart).
+7. Competitor Matrix & Market Gap (HTML Table + Plotly.js Dwell Time comparison).
+8. Partnership Formats & Tenant Leasing CTAs.
+
+VISUALIZATION SELECTION & JUSTIFICATION:
+- Hinterland Population: Bar Chart (Chart.js) -> Best for categorical ranking across 5 districts. (NO SVG)
+- Demographic Structure: Doughnut Chart (Chart.js) -> Best for composition breakdown (productive vs non-productive age). (NO SVG)
+- UMK Escalation: Line Chart with Fill (Chart.js) -> Best for continuous temporal trend (2023-2026). (NO SVG)
+- WTP Analysis: Horizontal Bar Chart (Chart.js) -> Clear comparison of price points. (NO SVG)
+- Dwell Time Competitor Comparison: Plotly.js Bar Chart (Canvas/WebGL) -> High contrast visual comparison between destination types. (NO SVG)
+
+NO SVG & NO MERMAID JS CONFIRMATION:
+Neither Mermaid JS nor SVG graphics were used anywhere in this file. HTML/CSS styling, Canvas rendering (Chart.js / Plotly.js), and standard Unicode icons are used exclusively.
+-->
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infografik Kemitraan F&B - Banyuwangi Nature Adventure (BNA)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        bna: {
+                            cyan: '#06b6d4',
+                            darkcyan: '#0284c7',
+                            lightcyan: '#e0f2fe',
+                            pink: '#ec4899',
+                            darkpink: '#db2777',
+                            lightpink: '#fce7f3',
+                            amber: '#f59e0b',
+                            darkamber: '#d97706',
+                            lightamber: '#fef3c7',
+                            mint: '#10b981',
+                            darkmint: '#059669',
+                            lightmint: '#d1fae5',
+                            purple: '#8b5cf6',
+                            night: '#0f172a',
+                            slate: '#1e293b'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            margin-left: auto;
+            margin-right: auto;
+            height: 320px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 360px;
+            }
+        }
+        .img-zoom {
+            transition: transform 0.5s ease;
+        }
+        .img-card:hover .img-zoom {
+            transform: scale(1.05);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #cbd5e1;
+            border-radius: 9999px;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-bna-pink selection:text-white">
+
+    <!-- Navigation Bar -->
+    <nav class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-cyan-100 px-4 py-3 shadow-sm">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <span class="text-2xl">✨</span>
+                <div class="flex flex-col">
+                    <span class="font-black text-xl tracking-tight bg-gradient-to-r from-bna-cyan via-bna-pink to-bna-amber bg-clip-text text-transparent">BANYUWANGI NATURE ADVENTURE</span>
+                    <span class="text-[10px] font-bold text-slate-400 -mt-1 tracking-widest uppercase">Hybrid Eco-Lifestyle Park Genteng</span>
+                </div>
+            </div>
+            <div class="hidden lg:flex gap-5 text-xs font-bold text-slate-600">
+                <a href="#visi" class="hover:text-bna-pink transition-colors">Visi & Heritage Shell</a>
+                <a href="#visual" class="hover:text-bna-pink transition-colors">Galeri Foto Area</a>
+                <a href="#denah" class="hover:text-bna-pink transition-colors">Denah Kawasan</a>
+                <a href="#demografi" class="hover:text-bna-pink transition-colors">Demografi & Pasar</a>
+                <a href="#ekonomi" class="hover:text-bna-pink transition-colors">Daya Beli & WTP</a>
+                <a href="#kompetisi" class="hover:text-bna-pink transition-colors">Matriks Kompetisi</a>
+                <a href="#kemitraan" class="hover:text-bna-pink transition-colors">Format Kemitraan</a>
+            </div>
+            <a href="#kontak" class="bg-gradient-to-r from-bna-pink to-bna-amber hover:from-bna-darkpink hover:to-bna-darkamber text-white font-extrabold text-xs md:text-sm px-5 py-2.5 rounded-full shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5">
+                Hubungi Leasing
+            </a>
+        </div>
+    </nav>
+
+    <!-- Header / Hero Section -->
+    <header class="relative bg-gradient-to-br from-slate-900 via-cyan-950 to-pink-950 py-16 px-4 text-white overflow-hidden shadow-2xl">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(236,72,153,0.25),transparent_50%)]"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(6,182,212,0.25),transparent_50%)]"></div>
+        
+        <div class="max-w-7xl mx-auto relative z-10 text-center">
+            <div class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white px-4 py-1.5 rounded-full text-xs md:text-sm font-extrabold mb-6 shadow-sm">
+                <span>📍 Genteng, Banyuwangi</span>
+                <span>•</span>
+                <span class="text-amber-300">Peluang Kemitraan F&B & Retail Premier 2026</span>
+            </div>
+            <h1 class="text-3xl md:text-6xl font-black tracking-tight mb-4 leading-tight">
+                BANYUWANGI NATURE ADVENTURE
+            </h1>
+            <p class="text-base md:text-xl font-medium text-cyan-100 max-w-4xl mx-auto mb-10 leading-relaxed">
+                Transformasi Destinasi Menjadi <span class="bg-gradient-to-r from-bna-pink to-bna-amber text-white px-3 py-1 rounded-lg font-black shadow-md">Hybrid Eco-Lifestyle Park & Light Attraction</span> Pertama di Pusat Kegiatan Lokal (PKL) Kedua Banyuwangi.
+            </p>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-6xl mx-auto text-left">
+                <div class="bg-white/95 backdrop-blur border border-white p-5 rounded-2xl shadow-xl text-slate-800">
+                    <div class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Captive Market Hinterland</div>
+                    <div class="text-2xl md:text-4xl font-black text-bna-darkcyan">513.000+</div>
+                    <div class="text-xs text-slate-500 font-semibold mt-1">Jiwa di 5 Kecamatan Penyokong</div>
+                </div>
+                <div class="bg-white/95 backdrop-blur border border-white p-5 rounded-2xl shadow-xl text-slate-800">
+                    <div class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Wisatawan Banyuwangi</div>
+                    <div class="text-2xl md:text-4xl font-black text-bna-darkpink">3,67 Juta</div>
+                    <div class="text-xs text-slate-500 font-semibold mt-1">+7,25% Pertumbuhan YoY (2025)</div>
+                </div>
+                <div class="bg-white/95 backdrop-blur border border-white p-5 rounded-2xl shadow-xl text-slate-800">
+                    <div class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Proyeksi Dwell Time</div>
+                    <div class="text-2xl md:text-4xl font-black text-bna-darkamber">3,5 - 5 Jam</div>
+                    <div class="text-xs text-slate-500 font-semibold mt-1">3x Lipat Wisata Alam Biasa</div>
+                </div>
+                <div class="bg-white/95 backdrop-blur border border-white p-5 rounded-2xl shadow-xl text-slate-800">
+                    <div class="text-[11px] font-extrabold text-slate-400 uppercase tracking-wider mb-1">Preferensi Ambience Malam</div>
+                    <div class="text-2xl md:text-4xl font-black text-bna-darkmint">72%</div>
+                    <div class="text-xs text-slate-500 font-semibold mt-1">Prioritaskan Suasana Visual & Light Show</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-12 space-y-16">
+
+        <!-- SECTION 01: Visi & Heritage Shell -->
+        <section id="visi" class="bg-white rounded-3xl p-6 md:p-10 border border-cyan-100 shadow-xl relative overflow-hidden">
+            <div class="mb-8">
+                <span class="text-xs font-extrabold text-bna-darkpink uppercase tracking-widest bg-bna-lightpink px-3.5 py-1.5 rounded-full border border-pink-200">01 · Visi & Konsep Bisnis</span>
+                <h2 class="text-2xl md:text-4xl font-black text-slate-900 mt-3">Dari Atraksi Menuju Pengalaman: Heritage Shell, Global Taste</h2>
+                <p class="text-slate-600 mt-3 max-w-4xl text-sm md:text-base leading-relaxed font-medium">
+                    Banyuwangi Nature Adventure (BNA) merespons pergeseran preferensi wisatawan dari wahana mekanis biasa menuju <strong>suasana visual, keindahan taman lampu, dan gaya hidup alfresco dining</strong>. Menyasar Gen Z, Milenial, dan Keluarga Modern yang mencari pengalaman rekreasi holistik.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-gradient-to-b from-cyan-50 to-white border border-cyan-200 p-6 rounded-2xl shadow-sm hover:shadow-md transition-all">
+                    <div class="text-3xl mb-3">🏛️</div>
+                    <h3 class="text-base font-bold text-bna-darkcyan mb-2">Premium Shell (Gratis)</h3>
+                    <p class="text-xs md:text-sm text-slate-600 leading-relaxed font-medium">
+                        Desain booth arsitektural ikonik dengan fasad <strong>Osing Modern</strong> tanpa biaya konstruksi tambahan bagi tenant mitra.
+                    </p>
+                </div>
+                <div class="bg-gradient-to-b from-pink-50 to-white border border-pink-200 p-6 rounded-2xl shadow-sm hover:shadow-md transition-all">
+                    <div class="text-3xl mb-3">🍜</div>
+                    <h3 class="text-base font-bold text-bna-darkpink mb-2">Menu Freedom</h3>
+                    <p class="text-xs md:text-sm text-slate-600 leading-relaxed font-medium">
+                        Kebebasan menyajikan menu kuliner Thai, Western, Kopi Kekinian, hingga masakan tradisional lokal di dalam shell budaya modern ini.
+                    </p>
+                </div>
+                <div class="bg-gradient-to-b from-amber-50 to-white border border-amber-200 p-6 rounded-2xl shadow-sm hover:shadow-md transition-all">
+                    <div class="text-3xl mb-3">🌟</div>
+                    <h3 class="text-base font-bold text-bna-darkamber mb-2">Destination Backing</h3>
+                    <p class="text-xs md:text-sm text-slate-600 leading-relaxed font-medium">
+                        Diposisikan secara resmi sebagai hub budaya & wisata modern berdukungan Pemda Banyuwangi, menarik media & influencer.
+                    </p>
+                </div>
+            </div>
+
+            <!-- FOTO SLOT 01 & 02: VISI & LAYOUT -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                
+                <!-- CARD FOTO 01 -->
+                <div class="img-card bg-slate-900 rounded-2xl overflow-hidden shadow-lg border border-slate-200 group relative">
+                    <div class="h-64 overflow-hidden relative">
+                        <img id="foto-01" src="images/foto-01.png" alt="Fasad Booth Heritage Shell Osing Modern" class="w-full h-full object-cover img-zoom">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent"></div>
+                        <span class="absolute top-3 left-3 bg-bna-darkcyan text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider shadow">Foto 01 · Fasad Booth Shell</span>
+                    </div>
+                    <div class="p-5 text-white relative bg-slate-900">
+                        <h4 class="text-base font-bold text-white mb-1">Fasad Booth "Heritage Shell" Osing Modern</h4>
+                        <p class="text-xs text-slate-300 font-medium leading-relaxed">Arsitektur khas rumah Osing Kayu dengan ornamen etnik modern yang estetik & ramah foto.</p>
+                    </div>
+                </div>
+
+                <!-- CARD FOTO 02 -->
+                <div class="img-card bg-slate-900 rounded-2xl overflow-hidden shadow-lg border border-slate-200 group relative">
+                    <div class="h-64 overflow-hidden relative">
+                        <img id="foto-02" src="images/foto-02.png" alt="Ambience Suasana Taman Lampu LED Malam" class="w-full h-full object-cover img-zoom">
+                        <div class="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent"></div>
+                        <span class="absolute top-3 left-3 bg-bna-darkpink text-white text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-wider shadow">Foto 02 · Light Show Ambience</span>
+                    </div>
+                    <div class="p-5 text-white relative bg-slate-900">
+                        <h4 class="text-base font-bold text-white mb-1">Suasana Taman Lampu & Light Attraction Malam</h4>
+                        <p class="text-xs text-slate-300 font-medium leading-relaxed">Instalasi lampu LED tematik yang memikat pengunjung malam hari dan meningkatkan dwell time.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 02: Galeri Foto Area & Wahana Utama -->
+        <section id="visual" class="bg-white rounded-3xl p-6 md:p-10 border border-cyan-100 shadow-xl space-y-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+                <div>
+                    <span class="text-xs font-extrabold text-bna-darkamber uppercase tracking-widest bg-bna-lightamber px-3.5 py-1.5 rounded-full border border-amber-200">02 · Galeri Foto Atraksi & Zona Utama</span>
+                    <h2 class="text-2xl md:text-4xl font-black text-slate-900 mt-3">Pratinjau Foto Wahana & Area Rekreasi</h2>
+                    <p class="text-slate-600 mt-2 max-w-3xl text-sm md:text-base leading-relaxed font-medium">
+                        Visualiasi wahana utama BNA yang dirancang untuk menarik lalu lintas pengunjung yang konsisten.
+                    </p>
+                </div>
+            </div>
+
+            <!-- GRID FOTO SLOT 03, 04, 05, 06 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                
+                <!-- CARD FOTO 03 -->
+                <div class="img-card bg-white rounded-2xl overflow-hidden shadow-md border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <div class="h-44 overflow-hidden relative">
+                            <img id="foto-03" src="images/foto-03.png" alt="Foto Gapura Masuk BNA" class="w-full h-full object-cover img-zoom">
+                            <span class="absolute top-2.5 left-2.5 bg-bna-darkamber text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase">Foto 03 · Gapura Main Entry</span>
+                        </div>
+                        <div class="p-4">
+                            <h4 class="text-sm font-extrabold text-slate-900">Gerbang Utama & Drop-Off</h4>
+                            <p class="text-xs text-slate-500 mt-1 font-medium">Gapura megah bermotif Osing emas & ticketing counter terpadu.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD FOTO 04 -->
+                <div class="img-card bg-white rounded-2xl overflow-hidden shadow-md border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <div class="h-44 overflow-hidden relative">
+                            <img id="foto-04" src="images/foto-04.png" alt="Bianglala & Wahana Permainan Malam" class="w-full h-full object-cover img-zoom">
+                            <span class="absolute top-2.5 left-2.5 bg-bna-darkpink text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase">Foto 04 · Bianglala Malam</span>
+                        </div>
+                        <div class="p-4">
+                            <h4 class="text-sm font-extrabold text-slate-900">Bianglala & Flying Swinger</h4>
+                            <p class="text-xs text-slate-500 mt-1 font-medium">Wahana bianglala raksasa yang tampak memukau saat disinari lampu neon.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD FOTO 05 -->
+                <div class="img-card bg-white rounded-2xl overflow-hidden shadow-md border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <div class="h-44 overflow-hidden relative">
+                            <img id="foto-05" src="images/foto-05.png" alt="Instalasi Satwa LED Blue Fire" class="w-full h-full object-cover img-zoom">
+                            <span class="absolute top-2.5 left-2.5 bg-bna-darkcyan text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase">Foto 05 · LED Animal Forest</span>
+                        </div>
+                        <div class="p-4">
+                            <h4 class="text-sm font-extrabold text-slate-900">Instalasi LED Animal Forest</h4>
+                            <p class="text-xs text-slate-500 mt-1 font-medium">Patung gajah & rusa berlampu neon interaktif khas tema Blue Fire.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CARD FOTO 06 -->
+                <div class="img-card bg-white rounded-2xl overflow-hidden shadow-md border border-slate-200 flex flex-col justify-between">
+                    <div>
+                        <div class="h-44 overflow-hidden relative">
+                            <img id="foto-06" src="images/foto-06.png" alt="Area Waterpark & Kolam Renang" class="w-full h-full object-cover img-zoom">
+                            <span class="absolute top-2.5 left-2.5 bg-bna-darkmint text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase">Foto 06 · Waterpark Siang</span>
+                        </div>
+                        <div class="p-4">
+                            <h4 class="text-sm font-extrabold text-slate-900">Waterpark & Seluncuran Air</h4>
+                            <p class="text-xs text-slate-500 mt-1 font-medium">Kolam pemandian anak & dewasa yang ramai dikunjungi keluarga pada siang hari.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 03: Denah Kawasan & Layout -->
+        <section id="denah" class="bg-white rounded-3xl p-6 md:p-10 border border-cyan-100 shadow-xl space-y-6">
+            <div>
+                <span class="text-xs font-extrabold text-bna-darkcyan uppercase tracking-widest bg-bna-lightcyan px-3.5 py-1.5 rounded-full border border-cyan-200">03 · Lay-Out & Master Plan Kawasan</span>
+                <h2 class="text-2xl md:text-4xl font-black text-slate-900 mt-3">Denah Tata Letak Area BNA & Foodcourt Central</h2>
+                <p class="text-slate-600 mt-3 max-w-4xl text-sm md:text-base leading-relaxed font-medium">
+                    Master plan BNA dirancang secara ilmiah untuk mengalirkan arus pengunjung dari pintu masuk utama melewati <strong>Area Foodcourt (10 Unit Tenant)</strong>, wahana permainan anak, hingga ke area kolam pemandian dan taman lampu.
+                </p>
+            </div>
+
+            <!-- DENAH MAP INTERAKTIF GRID -->
+            <div class="bg-slate-900 p-6 md:p-8 rounded-2xl border border-slate-800 text-white space-y-6">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-800 pb-4">
+                    <div>
+                        <h3 class="text-lg font-bold text-cyan-400">Peta Zona Masterplan 24 Jam BNA</h3>
+                        <p class="text-xs text-slate-400 mt-0.5">Distribusi Traffic Pengunjung Siang (Waterpark) & Malam (Taman Lampu)</p>
+                    </div>
+                    <div class="flex gap-2 text-xs font-bold">
+                        <span class="bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-3 py-1 rounded-lg">☀️ Zone Siang</span>
+                        <span class="bg-pink-500/20 text-pink-300 border border-pink-500/30 px-3 py-1 rounded-lg">🌙 Zone Malam</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-3 text-xs font-bold">
+                    <div class="md:col-span-12 bg-amber-500/20 border border-amber-500/40 p-3 rounded-xl text-center text-amber-300 flex justify-between items-center">
+                        <span>🏛️ GAPURA UTAMA & DROP-OFF ZONE</span>
+                        <span class="text-[10px] text-amber-200 font-normal">Pintu Masuk & Tiket Utama Kawasan</span>
+                    </div>
+
+                    <div class="md:col-span-4 bg-cyan-950/60 border border-cyan-700/50 p-4 rounded-xl space-y-3">
+                        <div class="text-cyan-400 font-extrabold text-sm border-b border-cyan-800/50 pb-2 flex justify-between">
+                            <span>🌊 ZONA WATERPARK</span>
+                            <span class="text-[10px] bg-cyan-900 px-2 py-0.5 rounded">SIANG</span>
+                        </div>
+                        <div class="bg-cyan-900/40 p-2.5 rounded-lg border border-cyan-800/30 text-cyan-200">
+                            🏊 Kolam Renang Anak & Dewasa
+                        </div>
+                        <div class="bg-cyan-900/40 p-2.5 rounded-lg border border-cyan-800/30 text-cyan-200">
+                            🛝 Seluncuran Air Warna-Warni
+                        </div>
+                        <div class="bg-cyan-900/40 p-2.5 rounded-lg border border-cyan-800/30 text-cyan-200">
+                            🎟️ Persewaan Ban & Pakaian Renang
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-4 bg-pink-950/70 border-2 border-bna-pink p-4 rounded-xl space-y-3 shadow-lg shadow-pink-950/50">
+                        <div class="text-pink-300 font-extrabold text-sm border-b border-pink-800/50 pb-2 flex justify-between items-center">
+                            <span>🍔 AREA FOODCOURT CENTRAL</span>
+                            <span class="text-[10px] bg-bna-pink text-white px-2 py-0.5 rounded font-black">10 UNIT TENANT</span>
+                        </div>
+                        <div class="bg-pink-900/50 p-2.5 rounded-lg border border-pink-700/40 text-pink-100 flex items-center justify-between">
+                            <span>🏬 Standard Kiosk (F&B Utama)</span>
+                            <span class="text-[10px] text-pink-300">Hub Tengah</span>
+                        </div>
+                        <div class="bg-pink-900/50 p-2.5 rounded-lg border border-pink-700/40 text-pink-100 flex items-center justify-between">
+                            <span>🎪 Island Pop-Up (Dessert/Snack)</span>
+                            <span class="text-[10px] text-pink-300">Alfresco Plaza</span>
+                        </div>
+                        <div class="bg-pink-900/50 p-2.5 rounded-lg border border-pink-700/40 text-pink-100 flex items-center justify-between">
+                            <span>🪑 Area Alfresco Seating Komunal</span>
+                            <span class="text-[10px] text-pink-300">Outdoor Seat</span>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-4 bg-slate-800/80 border border-slate-700 p-4 rounded-xl space-y-3">
+                        <div class="text-amber-400 font-extrabold text-sm border-b border-slate-700 pb-2 flex justify-between">
+                            <span>✨ TAMAN LAMPU & PLAYLAND</span>
+                            <span class="text-[10px] bg-slate-700 px-2 py-0.5 rounded">ALL-DAY</span>
+                        </div>
+                        <div class="bg-slate-700/40 p-2.5 rounded-lg border border-slate-600/40 text-amber-200">
+                            🎈 AC Indoor Playland (250 Anak)
+                        </div>
+                        <div class="bg-slate-700/40 p-2.5 rounded-lg border border-slate-600/40 text-purple-300">
+                            🌲 Blue Fire Neon & Hewan Menyala
+                        </div>
+                        <div class="bg-slate-700/40 p-2.5 rounded-lg border border-slate-600/40 text-amber-300">
+                            🎠 Flying Swinger & Bianglala
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CARD FOTO 07 & 08 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                
+                <!-- CARD FOTO 07 -->
+                <div class="img-card bg-white rounded-2xl overflow-hidden shadow-md border border-slate-200">
+                    <div class="h-56 overflow-hidden relative">
+                        <img id="foto-07" src="images/foto-07.png" alt="Area Foodcourt & Outdoor Alfresco Dining" class="w-full h-full object-cover img-zoom">
+                        <span class="absolute top-3 left-3 bg-bna-darkpink text-white text-[10px] font-black px-3 py-1 rounded-full uppercase">Foto 07 · Foodcourt Central</span>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="text-sm font-extrabold text-slate-900">Area Foodcourt & Dining Outdoor (Alfresco)</h4>
+                        <p class="text-xs text-slate-500 mt-1 font-medium">Tempat duduk komunal bernuansa taman outdoor yang dikelilingi 10 booth tenant makanan.</p>
+                    </div>
+                </div>
+
+                <!-- CARD FOTO 08 -->
+                <div class="img-card bg-white rounded-2xl overflow-hidden shadow-md border border-slate-200">
+                    <div class="h-56 overflow-hidden relative">
+                        <img id="foto-08" src="images/foto-08.png" alt="AC Indoor Playground untuk Anak" class="w-full h-full object-cover img-zoom">
+                        <span class="absolute top-3 left-3 bg-bna-purple text-white text-[10px] font-black px-3 py-1 rounded-full uppercase">Foto 08 · AC Indoor Playland</span>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="text-sm font-extrabold text-slate-900">AC Indoor Playground (Kapasitas 250 Anak)</h4>
+                        <p class="text-xs text-slate-500 mt-1 font-medium">Area bermain anak indoor yang sejuk ber-AC dengan arena mandi bola & seluncuran aman.</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- SECTION 04: Demografi & Riset Pasar -->
+        <section id="demografi" class="bg-white rounded-3xl p-6 md:p-10 border border-cyan-100 shadow-xl space-y-8">
+            <div>
+                <span class="text-xs font-extrabold text-bna-darkcyan uppercase tracking-widest bg-bna-lightcyan px-3.5 py-1.5 rounded-full border border-cyan-200">04 · Riset Pasar & Demografi</span>
+                <h2 class="text-2xl md:text-4xl font-black text-slate-900 mt-3">Pasar Tangkapan Masif 513.000+ Jiwa</h2>
+                <p class="text-slate-600 mt-3 max-w-4xl text-sm md:text-base leading-relaxed font-medium">
+                    Kecamatan Genteng ditetapkan sebagai Pusat Kegiatan Lokal (PKL) kedua paling berkembang dalam RTRW Banyuwangi 2024-2044. Dikelilingi 5 kecamatan hinterland, lokasi ini menjamin pasokan pengunjung harian yang konsisten.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-base font-bold text-bna-darkcyan">Populasi Hinterland 5 Kecamatan</h3>
+                        <span class="text-xs font-bold bg-bna-lightcyan text-bna-darkcyan px-3 py-1 rounded-full">Total > 513.000 Jiwa</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mb-4 font-medium">
+                        Sumber data: BPS Kabupaten Banyuwangi (Kecamatan Dalam Angka 2024).
+                    </p>
+                    <div class="chart-container">
+                        <canvas id="hinterlandChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-base font-bold text-bna-darkpink">Struktur Bonus Demografi</h3>
+                        <span class="text-xs font-bold bg-bna-lightpink text-bna-darkpink px-3 py-1 rounded-full">66,4% Usia Produktif</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mb-4 font-medium">
+                        Usia produktif (18-64 tahun) mendominasi, memiliki discretionary income untuk pengeluaran rekreasi & kuliner.
+                    </p>
+                    <div class="chart-container">
+                        <canvas id="demographyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CARD FOTO 09: AKSES TRANSPORTASI -->
+            <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm p-4 flex flex-col md:flex-row gap-5 items-center">
+                <div class="w-full md:w-1/3 h-40 overflow-hidden rounded-xl relative">
+                    <img id="foto-09" src="images/foto-09.png" alt="Foto Stasiun Kalisetail / Akses Jalan Genteng" class="w-full h-full object-cover img-zoom">
+                    <span class="absolute top-2 left-2 bg-bna-darkcyan text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase">Foto 09 · Hub Transportasi</span>
+                </div>
+                <div class="w-full md:w-2/3 space-y-2">
+                    <h4 class="text-base font-extrabold text-slate-900">Aksesibilitas & Konektivitas Transportasi Utama</h4>
+                    <p class="text-xs text-slate-600 font-medium leading-relaxed">
+                        Hanya 10 menit dari Stasiun Kalisetail Sempu, terhubung langsung dengan rute utama Jalur Lintas Selatan (JLS), serta didukung jaringan transportasi darat yang mempermudah mobilitas wisatawan antar-kota.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 05: Ekonomi & Daya Beli -->
+        <section id="ekonomi" class="bg-white rounded-3xl p-6 md:p-10 border border-cyan-100 shadow-xl space-y-8">
+            <div>
+                <span class="text-xs font-extrabold text-bna-darkamber uppercase tracking-widest bg-bna-lightamber px-3.5 py-1.5 rounded-full border border-amber-200">05 · Ekonomi & Daya Beli</span>
+                <h2 class="text-2xl md:text-4xl font-black text-slate-900 mt-3">Eskalasi UMK & Kesediaan Membayar Wisatawan</h2>
+                <p class="text-slate-600 mt-3 max-w-4xl text-sm md:text-base leading-relaxed font-medium">
+                    PDRB Non-Migas Banyuwangi menembus Rp 108,23 Triliun (Peringkat ke-8 di Jatim). Pertumbuhan UMK yang stabil memberi marjin sisa pendapatan untuk alokasi hiburan & kuliner keluarga.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-base font-bold text-bna-darkcyan">Eskalasi UMK Banyuwangi (2023-2026)</h3>
+                        <span class="text-xs font-bold bg-bna-lightcyan text-bna-darkcyan px-3 py-1 rounded-full">Proyeksi 2026 ~Rp 2,98 Juta</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="macroChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 shadow-sm">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-base font-bold text-bna-darkpink">Analisis Willingness to Pay (WTP)</h3>
+                        <span class="text-xs font-bold bg-bna-lightpink text-bna-darkpink px-3 py-1 rounded-full">86,4% Rela Membayar Lebih</span>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="wtpChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 06: Lanskap Kompetisi & Plotly -->
+        <section id="kompetisi" class="bg-white rounded-3xl p-6 md:p-10 border border-cyan-100 shadow-xl space-y-8">
+            <div>
+                <span class="text-xs font-extrabold text-bna-darkmint uppercase tracking-widest bg-bna-lightmint px-3.5 py-1.5 rounded-full border border-emerald-200">06 · Lanskap Kompetisi & Market Gap</span>
+                <h2 class="text-2xl md:text-4xl font-black text-slate-900 mt-3">Mengisi Celah Kosong: Hybrid Eco-Lifestyle Park</h2>
+                <p class="text-slate-600 mt-3 max-w-4xl text-sm md:text-base leading-relaxed font-medium">
+                    Pasar rekreasi di Banyuwangi saat ini terbagi dua: ekowisata alam murni tanpa F&B terkurasi, atau mall beton tertutup tanpa ruang hijau. BNA hadir mengisi celah kekosongan tersebut.
+                </p>
+            </div>
+
+            <div class="overflow-x-auto custom-scrollbar">
+                <table class="w-full text-left text-xs border-collapse rounded-2xl overflow-hidden border border-slate-200 shadow-sm">
+                    <thead>
+                        <tr class="bg-slate-900 text-white font-black uppercase tracking-wider text-[11px]">
+                            <th class="p-3.5 border-b border-slate-700">Nama Destinasi</th>
+                            <th class="p-3.5 border-b border-slate-700">Rentang Tiket</th>
+                            <th class="p-3.5 border-b border-slate-700">Karakter Utama</th>
+                            <th class="p-3.5 border-b border-slate-700 text-bna-pink">Celah Peluang BNA</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200 font-medium bg-slate-50 text-slate-700">
+                        <tr>
+                            <td class="p-3.5 font-bold text-slate-900 bg-white">De Djawatan & Pinus Songgon</td>
+                            <td class="p-3.5">Rp 5.000 - Rp 175.000</td>
+                            <td class="p-3.5">Ekowisata alam hutan trembesi purba & rafting.</td>
+                            <td class="p-3.5 font-bold text-bna-darkcyan bg-cyan-50/50">Menyediakan dining outdoor estetik & akses mudah.</td>
+                        </tr>
+                        <tr>
+                            <td class="p-3.5 font-bold text-slate-900 bg-white">Banyuwangi Park</td>
+                            <td class="p-3.5">Rp 30.000 - Rp 70.000</td>
+                            <td class="p-3.5">Theme park buatan indoor/outdoor (man-made).</td>
+                            <td class="p-3.5 font-bold text-bna-darkamber bg-amber-50/50">Sensasi petualangan outdoor lanskap hijau alami & taman lampu.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-base font-bold text-bna-darkcyan">Proyeksi Dwell Time Pengunjung (Jam)</h3>
+                    <span class="text-xs font-bold bg-bna-lightcyan text-bna-darkcyan px-3 py-1 rounded-full">3,5 - 5 Jam di BNA</span>
+                </div>
+                <div id="plotlyCompetitorChart" class="w-full h-[350px]"></div>
+            </div>
+        </section>
+
+        <!-- SECTION 07: Format Kemitraan -->
+        <section id="kemitraan" class="bg-white rounded-3xl p-6 md:p-10 border border-cyan-100 shadow-xl space-y-8">
+            <div>
+                <span class="text-xs font-extrabold text-bna-darkcyan uppercase tracking-widest bg-bna-lightcyan px-3.5 py-1.5 rounded-full border border-cyan-200">07 · Format & Skema Kemitraan</span>
+                <h2 class="text-2xl md:text-4xl font-black text-slate-900 mt-3">Pilihan Format Penyewaan & Kriteria Mitra</h2>
+                <p class="text-slate-600 mt-3 max-w-4xl text-sm md:text-base leading-relaxed font-medium">
+                    Fasilitas bersama disediakan: area makan komunal estetik, keamanan 24 jam, parkir terintegrasi, & pengelolaan limbah terpusat.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-slate-50 p-6 rounded-2xl border-t-4 border-bna-cyan border-x border-b border-slate-200 shadow-sm">
+                    <div class="text-[10px] font-extrabold text-bna-darkcyan uppercase tracking-widest mb-1">Format 01</div>
+                    <h3 class="text-xl font-black text-slate-900 mb-2">Anchor Tenant</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed font-medium mb-4">
+                        Area utama paling luas. Sangat ideal untuk restoran keluarga besar atau kedai kopi jaringan nasional.
+                    </p>
+                    <div class="text-xs font-bold text-bna-darkcyan bg-cyan-100 px-3 py-1.5 rounded-lg text-center">
+                        Traffic Utama Kawasan BNA
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 p-6 rounded-2xl border-t-4 border-bna-pink border-x border-b border-slate-200 shadow-sm">
+                    <div class="text-[10px] font-extrabold text-bna-darkpink uppercase tracking-widest mb-1">Format 02</div>
+                    <h3 class="text-xl font-black text-slate-900 mb-2">Standard Kiosk</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed font-medium mb-4">
+                        Ruang ukuran menengah untuk fast-food, dessert, es krim, atau minuman tren pasca berenang.
+                    </p>
+                    <div class="text-xs font-bold text-bna-darkpink bg-pink-100 px-3 py-1.5 rounded-lg text-center">
+                        Koridor Foodcourt Central
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 p-6 rounded-2xl border-t-4 border-bna-amber border-x border-b border-slate-200 shadow-sm">
+                    <div class="text-[10px] font-extrabold text-bna-darkamber uppercase tracking-widest mb-1">Format 03</div>
+                    <h3 class="text-xl font-black text-slate-900 mb-2">Pop-Up / Island Booth</h3>
+                    <p class="text-xs text-slate-600 leading-relaxed font-medium mb-4">
+                        Booth portabel fleksibel dengan modal awal terjangkau. Cocok untuk camilan ringan & suvenir.
+                    </p>
+                    <div class="text-xs font-bold text-bna-darkamber bg-amber-100 px-3 py-1.5 rounded-lg text-center">
+                        Plaza Lampu & Playland
+                    </div>
+                </div>
+            </div>
+
+            <!-- CARD FOTO 10: PROTOTYPE TENANT KIOSK -->
+            <div class="bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm p-4 flex flex-col md:flex-row gap-5 items-center">
+                <div class="w-full md:w-1/3 h-40 overflow-hidden rounded-xl relative">
+                    <img id="foto-10" src="images/foto-10.png" alt="Prototype Kiosk Tenant F&B BNA" class="w-full h-full object-cover img-zoom">
+                    <span class="absolute top-2 left-2 bg-bna-darkpink text-white text-[9px] font-black px-2.5 py-1 rounded-full uppercase">Foto 10 · Prototype Kiosk</span>
+                </div>
+                <div class="w-full md:w-2/3 space-y-2">
+                    <h4 class="text-base font-extrabold text-slate-900">Prototype Kiosk Tenant F&B Komposisi Kayu</h4>
+                    <p class="text-xs text-slate-600 font-medium leading-relaxed">
+                        Desain booth makanan ramah lingkungan dengan aksen etnik modern yang sudah dilengkapi instalasi listrik terstandarisasi, bak cuci piring, dan pencahayaan malam yang siap huni (ready-to-fit-out).
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 08: CTA Leasing -->
+        <section id="kontak" class="bg-gradient-to-r from-cyan-600 via-pink-600 to-amber-500 rounded-3xl p-8 md:p-12 text-center text-white relative overflow-hidden shadow-2xl">
+            <div class="max-w-3xl mx-auto space-y-6 relative z-10">
+                <span class="text-4xl">🌈✨</span>
+                <h2 class="text-3xl md:text-5xl font-black tracking-tight drop-shadow-md">Amankan Slot Kemitraan Anda Sekarang!</h2>
+                <p class="text-cyan-50 text-sm md:text-base leading-relaxed font-medium drop-shadow">
+                    Slot tenant terbatas per zona lokasi strategis terisi lebih dulu seiring mendekatnya jadwal fit-out gerai BNA.
+                </p>
+
+                <div class="pt-4 flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <a href="https://wa.me/6285645003246" target="_blank" class="w-full sm:w-auto bg-white hover:bg-slate-100 text-bna-darkpink font-black text-base px-8 py-4 rounded-2xl shadow-xl transition-all transform hover:scale-105 flex items-center justify-center gap-2">
+                        <span>📱 Hubungi Resa (+62 856 4500 3246)</span>
+                    </a>
+                </div>
+
+                <div class="pt-8 text-xs text-cyan-100 border-t border-white/20 max-w-xl mx-auto space-y-1 font-medium">
+                    <div class="font-bold text-white">Marketing & Leasing Office BNA:</div>
+                    <div>Jl. Hasanudin, Dusun Krajan, Genteng Wetan, Kec. Genteng, Kab. Banyuwangi, Jawa Timur 68465</div>
+                    <div class="text-amber-200 mt-2 font-semibold">© 2026 Banyuwangi Nature Adventure (BNA). All Rights Reserved.</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- JavaScript Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            function wrapLabels(labels) {
+                return labels.map(label => {
+                    if (typeof label === 'string' && label.length > 16) {
+                        const words = label.split(' ');
+                        const lines = [];
+                        let currentLine = words[0];
+
+                        for (let i = 1; i < words.length; i++) {
+                            if ((currentLine + ' ' + words[i]).length <= 16) {
+                                currentLine += ' ' + words[i];
+                            } else {
+                                lines.push(currentLine);
+                                currentLine = words[i];
+                            }
+                        }
+                        lines.push(currentLine);
+                        return lines;
+                    }
+                    return label;
+                });
+            }
+
+            const standardTooltipConfig = {
+                callbacks: {
+                    title: function(tooltipItems) {
+                        const item = tooltipItems[0];
+                        let label = item.chart.data.labels[item.dataIndex];
+                        if (Array.isArray(label)) {
+                            return label.join(' ');
+                        } else {
+                            return label;
+                        }
+                    }
+                }
+            };
+
+            const hinterlandCtx = document.getElementById('hinterlandChart').getContext('2d');
+            const rawHinterlandLabels = ['Muncar (134.333 Jiwa)', 'Srono (100.118 Jiwa)', 'Genteng (96.848 Jiwa)', 'Sempu (85.845 Jiwa)', 'Rogojampi (59.109 Jiwa)'];
+            new Chart(hinterlandCtx, {
+                type: 'bar',
+                data: {
+                    labels: wrapLabels(rawHinterlandLabels),
+                    datasets: [{
+                        label: 'Populasi (Jiwa)',
+                        data: [134333, 100118, 96848, 85845, 59109],
+                        backgroundColor: ['#06b6d4', '#ec4899', '#f59e0b', '#10b981', '#8b5cf6'],
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: standardTooltipConfig
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                            ticks: { color: '#334155', font: { weight: 'bold' } }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#1e293b', font: { size: 10, weight: 'bold' } }
+                        }
+                    }
+                }
+            });
+
+            const demographyCtx = document.getElementById('demographyChart').getContext('2d');
+            const rawDemoLabels = ['Usia Produktif 18-64 (66,4%)', 'Usia Non-Produktif (33,6%)'];
+            new Chart(demographyCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: wrapLabels(rawDemoLabels),
+                    datasets: [{
+                        data: [66.4, 33.6],
+                        backgroundColor: ['#ec4899', '#cbd5e1'],
+                        borderWidth: 3,
+                        borderColor: '#ffffff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#1e293b', font: { size: 11, weight: 'bold' } }
+                        },
+                        tooltip: standardTooltipConfig
+                    }
+                }
+            });
+
+            const macroCtx = document.getElementById('macroChart').getContext('2d');
+            new Chart(macroCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan 2023', 'Jul 2023', 'Jan 2024', 'Jul 2024', 'Jan 2025', 'Jul 2025', 'Jan 2026'],
+                    datasets: [{
+                        label: 'UMK Banyuwangi (Juta Rp)',
+                        data: [2.53, 2.60, 2.64, 2.72, 2.81, 2.90, 2.98],
+                        borderColor: '#06b6d4',
+                        backgroundColor: 'rgba(6, 182, 212, 0.15)',
+                        fill: true,
+                        tension: 0.3,
+                        borderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: standardTooltipConfig
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            min: 2.3,
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                            ticks: { color: '#334155', font: { weight: 'bold' } }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { color: '#1e293b', font: { size: 10, weight: 'bold' } }
+                        }
+                    }
+                }
+            });
+
+            const wtpCtx = document.getElementById('wtpChart').getContext('2d');
+            const rawWtpLabels = [
+                'Tiket Dasar Atraksi (Rp 15.000)',
+                'WTP Wisatawan Domestik (Rp 25.000)',
+                'WTP Wisatawan Asing (Rp 435.000 / $28)'
+            ];
+            new Chart(wtpCtx, {
+                type: 'bar',
+                data: {
+                    labels: wrapLabels(rawWtpLabels),
+                    datasets: [{
+                        label: 'Nominal Rp (Willingness to Pay)',
+                        data: [15000, 25000, 435000],
+                        backgroundColor: ['#94a3b8', '#06b6d4', '#f59e0b'],
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: standardTooltipConfig
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                            ticks: { color: '#334155', font: { weight: 'bold' } }
+                        },
+                        y: {
+                            grid: { display: false },
+                            ticks: { color: '#1e293b', font: { size: 10, weight: 'bold' } }
+                        }
+                    }
+                }
+            });
+
+            const plotlyData = [{
+                x: ['De Djawatan', 'Pinus Songgon', 'Kali Sawah', 'Banyuwangi Park', 'Sun East Mall', 'BNA (Hybrid Park)'],
+                y: [1.2, 2.5, 2.0, 3.0, 2.2, 4.5],
+                type: 'bar',
+                marker: {
+                    color: ['#cbd5e1', '#cbd5e1', '#cbd5e1', '#94a3b8', '#94a3b8', '#ec4899'],
+                    line: { color: '#db2777', width: 2 }
+                }
+            }];
+
+            const plotlyLayout = {
+                title: {
+                    text: 'Proyeksi Dwell Time Pengunjung (Jam)',
+                    font: { color: '#0f172a', size: 14, weight: 800 }
+                },
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                margin: { l: 40, r: 20, t: 40, b: 60 },
+                xaxis: {
+                    tickfont: { color: '#1e293b', size: 10, weight: 'bold' },
+                    gridcolor: 'rgba(0,0,0,0.05)'
+                },
+                yaxis: {
+                    title: { text: 'Waktu Singgah (Jam)', font: { color: '#334155', size: 11 } },
+                    tickfont: { color: '#334155' },
+                    gridcolor: 'rgba(0,0,0,0.08)'
+                }
+            };
+
+            const plotlyConfig = {
+                responsive: true,
+                displayModeBar: false
+            };
+
+            Plotly.newPlot('plotlyCompetitorChart', plotlyData, plotlyLayout, plotlyConfig);
+
+        });
+    </script>
+</body>
+</html>
